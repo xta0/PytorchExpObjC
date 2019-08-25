@@ -346,6 +346,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com..TestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "$(PODS_ROOT)/PytorchExpObjC/apis/";
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/taox/Desktop/Pytorch-Demos/PytorchExpObjC/testApp/swift/TestApp/TestApp/TestApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -368,6 +369,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com..TestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "$(PODS_ROOT)/PytorchExpObjC/apis/";
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/taox/Desktop/Pytorch-Demos/PytorchExpObjC/testApp/swift/TestApp/TestApp/TestApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -21,12 +21,12 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   PytorchExpObjC:
-    :commit: 94b3b730dd190d91f187c27200bbaa8fb5fbcd2e
+    :commit: 673f8572f8885e79b4d9b8f704a79374fd8194cc
     :git: https://github.com/xta0/PytorchExpObjC.git
 
 SPEC CHECKSUMS:
   PytorchExp: f700aadfe498196941ace700821c4f7d02fcea67
-  PytorchExpObjC: 1d73b4f7f55c84619d2b30815a0f497432a03bbc
+  PytorchExpObjC: 9322cdf735778e91ae6b1082244b545372d05c95
 
 PODFILE CHECKSUM: 134e6b909903b4b1a1fe0a6ac9f625147b45f5b5
 
