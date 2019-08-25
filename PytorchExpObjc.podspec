@@ -15,6 +15,7 @@ Pod::Spec.new do |s|
     s.static_framework = true
     s.public_header_files = 'apis/*.h'
     s.source_files = [ 'apis/*.{h,m,mm}', 'src/*.{h,m,mm}' ]
+    s.module_map = 'apis/framework.modulemap'
     s.dependency 'PytorchExp'
     s.pod_target_xcconfig = { 
       'HEADER_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/PytorchExp/install/include" "${PODS_ROOT}/PytorchExpObjC/apis"',
