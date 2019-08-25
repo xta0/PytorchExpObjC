@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
     s.source_files = [ 'apis/*.{h,m,mm}', 'src/*.{h,m,mm}' ]
     s.dependency 'PytorchExp'
     s.pod_target_xcconfig = { 
-      'HEADER_SEARCH_PATHS' => '$(inherited)' + '"${PODS_TARGET_SRCROOT}"' + '"${PODS_TARGET_SRCROOT}/PytorchExpObjC/apis"',
+      'HEADER_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/PytorchExp/install/include" "${PODS_ROOT}/PytorchExpObjC/apis"',
       'VALID_ARCHS' => 'armv7 armv7s arm64' 
     }
   end
