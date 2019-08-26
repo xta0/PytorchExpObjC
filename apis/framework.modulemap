@@ -1,4 +1,4 @@
-module PytorchExpObjC [system] {
+framework module PytorchExpObjC {
     umbrella header "PyTorchExpObjC.h"
     export *
 }

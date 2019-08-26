@@ -2,5 +2,6 @@
 platform :ios, '10.3'
 
 target 'TestApp' do
+  use_frameworks!
   pod 'PytorchExpObjC', :git=>'https://github.com/xta0/PytorchExpObjC.git' ,:branch => 'master'
 end
