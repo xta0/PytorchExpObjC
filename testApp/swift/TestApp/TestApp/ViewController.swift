@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import PytorchExp
+import PytorchExpObjC
 
 class ViewController: UIViewController {
 
