@@ -10,7 +10,7 @@
 #import "PTHTensor.h"
 #import <PytorchExp/PytorchExp.h>
 
-#define CHECK_IMPL(x) NSCAssert(NO,@"impl is nil!");
+#define CHECK_IMPL(x) NSCAssert(x!=nil,@"impl is nil!");
 
 #define DEFINE_TENSOR_TYPES(_) \
     _(Byte) \
@@ -60,15 +60,14 @@ static inline PTHTensorType tensorType(c10::ScalarType type) {
     PTHTensor* t = [PTHTensor new];
     t->_type  = type;
     t->_shape = [dims copy];
-    t->_impl = impl;
+    t->_impl = std::move(impl);
     
     return t;
 }
 
 - (NSString* )description {
     CHECK_IMPL(_impl);
-    std::string str = _impl -> toString();
-    return [NSString stringWithCString:str.c_str() encoding:NSASCIIStringEncoding];
+    return [NSString stringWithCString:_impl -> toString().c_str() encoding:NSASCIIStringEncoding];
 }
 
 @end
@@ -78,6 +77,10 @@ static inline PTHTensorType tensorType(c10::ScalarType type) {
 - (at::Tensor)toTensor {
     CHECK_IMPL(_impl);
     return at::Tensor(*_impl);
+}
+
+- (at::Tensor* )unsafeImpl {
+    return _impl.get();
 }
 
 + (PTHTensor* )newWithTensor:(const at::Tensor& ) tensor{

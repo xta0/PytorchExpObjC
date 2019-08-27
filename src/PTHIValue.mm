@@ -158,6 +158,10 @@ DEFINE_TO_SCALAR_LIST(Double);
     return {};
 }
 
+- (at::IValue* )unsafeImpl {
+    return _impl.get();
+}
+
 + (PTHIValue* )newWithIValue:(const at::IValue& )v {
     PTHIValue* value = [PTHIValue new];
     
