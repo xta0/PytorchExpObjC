@@ -48,7 +48,6 @@ typedef NS_ENUM(NSUInteger, PTHIValueType) {
 - (NSNumber* )toBool;
 - (NSNumber* )toInt;
 - (NSNumber* )toDouble;
-//- (NSArray<PTHIValue*>*) toTuple;
 - (NSArray<NSNumber*>*)  toBoolList;
 - (NSArray<NSNumber*>*)  toIntList;
 - (NSArray<NSNumber*>*)  toDoubleList;

@@ -36,40 +36,26 @@
                                    NSArray<NSNumber*>* index)) completion {
     
     NSData* pixels = [image resize:{IMG_W,IMG_H}].rgb;
-    PTHTensor* imageTensor = [PTHTensor newWithType:PTHTensorTypeByte Shape:@[ @(1), @(IMG_W), @(IMG_H), @(IMG_C) ] Data:(void* )pixels.bytes];
+    PTHTensor* imageTensor = [PTHTensor newWithType:PTHTensorTypeByte Size:@[ @(1), @(IMG_W), @(IMG_H), @(IMG_C) ] Data:(void* )pixels.bytes];
     imageTensor = [imageTensor permute:@[@(0),@(3),@(1),@(2)]];
-    imageTensor = [imageTensor toType:PTHTensorTypeFloat];
-    
-    //---------------------------------------------------------------------
-    //calling private APIs, cuz I didn't implement those ops below.
-    auto img_tensor = [imageTensor toTensor];
-    img_tensor.div_(255);
-    // normalize the input tensor
-    img_tensor[0][0].sub_(0.485).div_(0.229);
-    img_tensor[0][1].sub_(0.456).div_(0.224);
-    img_tensor[0][2].sub_(0.406).div_(0.225);
-    //---------------------------------------------------------------------
-    
-    imageTensor = [PTHTensor newWithTensor:img_tensor];
+    imageTensor = [imageTensor to:PTHTensorTypeFloat];
+    //normalize the tensor
+    imageTensor = [imageTensor div_:255.0];
+    [[imageTensor[0][0] sub_:0.485] div_:0.229];
+    [[imageTensor[0][1] sub_:0.485] div_:0.229];
+    [[imageTensor[0][2] sub_:0.485] div_:0.229];
     PTHIValue* inputIValue = [PTHIValue newIValueWithTensor:imageTensor];
-    PTHIValue* outputIValue = [_module forward:@[inputIValue]];
-    PTHTensor* outputTensor = [outputIValue toTensor];
-    
-    //---------------------------------------------------------------------
-    //calling private APIs, cuz I didn't implement those ops below.
-    auto outputs = [outputTensor toTensor];
-    auto result = outputs.topk(10, -1);
-    //flat socres and indexes
-    auto scores = std::get<0>(result).view(-1);
-    auto idxs = std::get<1>(result).view(-1);
+    PTHTensor* outputTensor = [[_module forward:@[inputIValue]] toTensor];
+    //collect the top10 results
+    NSArray<PTHTensor* >* topkResults = [outputTensor topKResult:@(10) Dim:@(-1) isLargest:YES isSorted:YES];
+    PTHTensor* scores = [topkResults[0] view:@[@(-1)]];
+    PTHTensor* idxs   = [topkResults[1] view:@[@(-1)]];
     NSMutableArray* topScores = [NSMutableArray new];
     NSMutableArray* topIndexes = [NSMutableArray new];
-    //collect top 10 results
-    for (int i = 0; i < 10; ++i) {
-        [topScores addObject:@(scores[i].item().toFloat())];
-        [topIndexes addObject:@(idxs[i].item().toInt())];
+    for(int i=0;i<10;++i){
+        [topScores addObject:@(scores[i].item.floatValue)];
+        [topIndexes addObject:@(idxs[i].item.longValue)];
     }
-    //---------------------------------------------------------------------
     if(completion){
         completion(topScores.copy, topIndexes.copy);
     }
