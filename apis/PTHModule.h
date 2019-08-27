@@ -10,7 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class PTHIValue;
 @interface PTHModule : NSObject
+
++ (PTHModule* _Nullable)loadTorchscriptModel:(NSString* _Nullable)modelPath;
+
+- (PTHIValue* _Nullable)forward:(NSArray<PTHIValue* >* _Nullable)values;
+
+- (PTHIValue* _Nullable)run_method:(NSString* _Nullable)methodName withInputs:(NSArray<PTHIValue* >* _Nullable) inputs;
 
 @end
 
