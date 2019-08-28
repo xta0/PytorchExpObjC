@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   PytorchExpObjC:
-    :commit: f3a08a223fbf0b7da040981b4fbde3505d215cb4
+    :commit: 052dd8da4aae36557f04ee441244501fe1d73900
     :git: https://github.com/xta0/PytorchExpObjC.git
 
 SPEC CHECKSUMS:

@@ -9,6 +9,6 @@
 #ifndef TestApp_Bridging_Header_h
 #define TestApp_Bridging_Header_h
 
-//#import <PytorchExpObjC/PytorchExpObjC.h>
+#import <PytorchExpObjC/PytorchExpObjC.h>
 
 #endif /* TestApp_Bridging_Header_h */

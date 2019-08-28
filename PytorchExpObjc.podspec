@@ -21,4 +21,5 @@ Pod::Spec.new do |s|
       'HEADER_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/PytorchExp/install/include" "${PODS_ROOT}/PytorchExpObjC/apis"',
       'VALID_ARCHS' => 'armv7 armv7s arm64' 
     }
+    s.library = 'c++', 'stdc++'
   end

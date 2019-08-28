@@ -65,8 +65,7 @@ static inline PTHTensorType tensorType(c10::ScalarType type) {
 }
 
 - (BOOL) quantized{
-    CHECK_IMPL_(_impl)
-    return _impl->is_quantized();
+    return _impl ? _impl->is_quantized() : NO;
 }
 
 - (void* )data {
