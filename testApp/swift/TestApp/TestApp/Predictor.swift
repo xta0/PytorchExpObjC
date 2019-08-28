@@ -15,11 +15,11 @@ struct InferenceResult {
 }
 
 class Predictor {
-    var module: PTHModule?
+    var module: TorchModule?
     var labels: [String]?
     
     init(modelPath: String) {
-        self.module = PTHModule.loadTorchscriptModel(modelPath)
+        self.module = TorchModule.loadTorchscriptModel(modelPath)
         self.labels = loadLabel()
     }
     
@@ -28,8 +28,8 @@ class Predictor {
             completion([])
             return
         }
-        let imageTensor = PTHTensor.new(with: .float, size: [1,3,224,224], data: UnsafeMutablePointer(&data))
-        let imageIValue = PTHIValue.newIValue(with: imageTensor)
+        let imageTensor = TorchTensor.new(with: .float, size: [1,3,224,224], data: UnsafeMutablePointer(&data))
+        let imageIValue = TorchIValue.newIValue(with: imageTensor)
         let outputTensor = self.module?.forward([imageIValue])?.toTensor()
         
         guard let resultTensor = outputTensor else {
@@ -40,7 +40,7 @@ class Predictor {
         completion(topKResuls);
     }
     
-    private func getTopN(results: PTHTensor, count: Int) -> [InferenceResult] {
+    private func getTopN(results: TorchTensor, count: Int) -> [InferenceResult] {
         guard let labels = self.labels else {
             return []
         }

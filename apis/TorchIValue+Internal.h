@@ -1,22 +1,22 @@
 //
-//  PTHIValue+IValue.h
+//  TorchIValue+IValue.h
 //  Pods-TestApp
 //
 //  Created by taox on 8/25/19.
 //
 
-#import "PTHIValue.h"
+#import "TorchIValue.h"
 #import <PytorchExp/PytorchExp.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PTHIValue (Internal)
+@interface TorchIValue (Internal)
 
 - (at::IValue )toIValue;
 
 - (at::IValue* )unsafeImpl;
 
-+ (PTHIValue* )newWithIValue:(const at::IValue& )value;
++ (TorchIValue* )newWithIValue:(const at::IValue& )value;
 
 @end
 

@@ -1,5 +1,5 @@
 //
-//  PTHIValue.m
+//  TorchIValue.m
 //  Pytorch-Exp-Demo
 //
 //  Created by taox on 8/25/19.
@@ -7,10 +7,10 @@
 //
 
 #include <vector>
-#import "PTHIValue.h"
-#import "PTHIValue+Internal.h"
-#import "PTHTensor.h"
-#import "PTHTensor+Internal.h"
+#import "TorchIValue.h"
+#import "TorchIValue+Internal.h"
+#import "TorchTensor.h"
+#import "TorchTensor+Internal.h"
 #import <PytorchExp/PytorchExp.h>
 
 #define IVALUE_TYPE(_) \
@@ -33,17 +33,17 @@
 #define DEFINE_IVALUE_WITH_SCALAR(type) \
 + (instancetype) newIValueWith##type:(NSNumber* )value{\
     if(![value isKindOfClass:[NSNumber class]]){ return nil; }\
-    return [self newPTHIValueWithType:PTHIValueType##type Data:value]; \
+    return [self newTorchIValueWithType:TorchIValueType##type Data:value]; \
 }
 
 #define DEFINE_IVALUE_WITH_SCALAR_LIST(type) \
 + (instancetype) newIValueWith##type##List:(NSArray<NSNumber*>* )list{\
 if(![list isKindOfClass:[NSArray class]]){ return nil; }\
-return [self newPTHIValueWithType:PTHIValueType##type##List Data:list]; \
+return [self newTorchIValueWithType:TorchIValueType##type##List Data:list]; \
 }
 
 
-@implementation PTHIValue {
+@implementation TorchIValue {
     std::shared_ptr<at::IValue> _impl;
 }
 
@@ -54,8 +54,8 @@ DEFINE_IVALUE_WITH_SCALAR_LIST(Bool)
 DEFINE_IVALUE_WITH_SCALAR_LIST(Int)
 DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
 
-+ (instancetype) newIValueWithTensor:(PTHTensor* )tensor {
-    if(![tensor isKindOfClass:[PTHTensor class]]){
++ (instancetype) newIValueWithTensor:(TorchTensor* )tensor {
+    if(![tensor isKindOfClass:[TorchTensor class]]){
         return nil;
     }
     auto t = tensor.toTensor;
@@ -64,18 +64,18 @@ DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
     if(!tmp) {
         return nil;
     }
-    PTHIValue* value = [PTHIValue new];
-    value->_type = PTHIValueTypeTensorList;
+    TorchIValue* value = [TorchIValue new];
+    value->_type = TorchIValueTypeTensorList;
     value->_impl = std::move(tmp);
     return value;
 }
 
-+ (instancetype) newIValueWithTensorList:(NSArray<PTHTensor*>* )list {
-    if(![list isKindOfClass:[NSArray<PTHTensor* > class]]){
++ (instancetype) newIValueWithTensorList:(NSArray<TorchTensor*>* )list {
+    if(![list isKindOfClass:[NSArray<TorchTensor* > class]]){
         return nil;
     }
     c10::List<at::Tensor> tensorList;
-    for(PTHTensor* tensor in list){
+    for(TorchTensor* tensor in list){
         auto t = tensor.toTensor;
         tensorList.push_back(t);
     }
@@ -84,22 +84,22 @@ DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
     if(!tmp) {
         return nil;
     }
-    PTHIValue* value = [PTHIValue new];
-    value->_type = PTHIValueTypeTensorList;
+    TorchIValue* value = [TorchIValue new];
+    value->_type = TorchIValueTypeTensorList;
     value->_impl = std::move(tmp);
     return value;
 }
 
-+ (instancetype) newPTHIValueWithType:(PTHIValueType)type Data:(id _Nullable)data {
-    PTHIValue* value = [PTHIValue new];
++ (instancetype) newTorchIValueWithType:(TorchIValueType)type Data:(id _Nullable)data {
+    TorchIValue* value = [TorchIValue new];
     value->_type = type;
     at::IValue atIValue = {};
     switch (type) {
-    #define  DEFINE_IVALUE_SCALAR_CASE(x,y) case PTHIValueType##x: {atIValue = at::IValue([(NSNumber* )data y##Value]);break;}
+    #define  DEFINE_IVALUE_SCALAR_CASE(x,y) case TorchIValueType##x: {atIValue = at::IValue([(NSNumber* )data y##Value]);break;}
         IVALUE_SCALAR_TYPE(DEFINE_IVALUE_SCALAR_CASE)
     #undef DEFINE_IVALUE_SCALAR_CASE
             
-    #define  DEFINE_IVALUE_SCALAR_LIST_CASE(x,y) case PTHIValueType##x##List: {\
+    #define  DEFINE_IVALUE_SCALAR_LIST_CASE(x,y) case TorchIValueType##x##List: {\
     c10::List<y> list; \
     for(NSNumber* number in data){ list.push_back(number.y##Value); }\
     at::IValue value(list); break; }
@@ -137,19 +137,19 @@ DEFINE_TO_SCALAR_LIST(Int);
 DEFINE_TO_SCALAR_LIST(Double);
        
 
-- (PTHTensor* )toTensor {
+- (TorchTensor* )toTensor {
    if (!_impl || !_impl->isTensor()) {
        return nil;
    }
    at::Tensor tensor = _impl->toTensor();
-   return [PTHTensor newWithTensor:tensor];
+   return [TorchTensor newWithTensor:tensor];
 }
 
 @end
 
 #pragma mark - interoperability with at::IValue
 
-@implementation PTHIValue (Internal)
+@implementation TorchIValue (Internal)
 
 - (at::IValue )toIValue {
     if(_impl){
@@ -162,11 +162,11 @@ DEFINE_TO_SCALAR_LIST(Double);
     return _impl.get();
 }
 
-+ (PTHIValue* )newWithIValue:(const at::IValue& )v {
-    PTHIValue* value = [PTHIValue new];
++ (TorchIValue* )newWithIValue:(const at::IValue& )v {
+    TorchIValue* value = [TorchIValue new];
     
     #define IVALUE_TYPE_IF(x)\
-        if(v.is##x()) { value->_type = PTHIValueType##x; }
+        if(v.is##x()) { value->_type = TorchIValueType##x; }
         IVALUE_TYPE(IVALUE_TYPE_IF)
     #undef IVALUE_TYPE_IF
 

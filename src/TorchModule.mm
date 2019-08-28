@@ -1,5 +1,5 @@
 //
-//  PTHModule.m
+//  TorchModule.m
 //  Pytorch-Exp-Demo
 //
 //  Created by taox on 8/25/19.
@@ -7,15 +7,15 @@
 //
 
 #import <PytorchExp/PytorchExp.h>
-#import "PTHModule.h"
-#import "PTHIValue+Internal.h"
+#import "TorchModule.h"
+#import "TorchIValue+Internal.h"
 
 
-@implementation PTHModule {
+@implementation TorchModule {
     std::shared_ptr<torch::jit::script::Module> _impl;
 }
 
-+ (PTHModule* _Nullable)loadTorchscriptModel:(NSString* _Nullable)modelPath {
++ (TorchModule* _Nullable)loadTorchscriptModel:(NSString* _Nullable)modelPath {
     if(modelPath.length == 0){
         return nil;
     }
@@ -24,35 +24,35 @@
     if (!impl) {
         return nil;
     }
-    PTHModule* module = [PTHModule new];
+    TorchModule* module = [TorchModule new];
     module->_impl = std::move(impl);
     return module;
 }
 
-- (PTHIValue* _Nullable)forward:(NSArray<PTHIValue* >* _Nullable)values {
+- (TorchIValue* _Nullable)forward:(NSArray<TorchIValue* >* _Nullable)values {
     if (values.count == 0){
         return nil;
     }
     std::vector<at::IValue> inputs;
-    for(PTHIValue* value in values) {
+    for(TorchIValue* value in values) {
         inputs.push_back(value.toIValue);
     }
     auto result = _impl->forward(inputs);
-    return [PTHIValue newWithIValue:result];
+    return [TorchIValue newWithIValue:result];
 }
 
 
-- (PTHIValue* _Nullable)run_method:(NSString* _Nullable)methodName withInputs:(NSArray<PTHIValue* >* _Nullable) values {
+- (TorchIValue* _Nullable)run_method:(NSString* _Nullable)methodName withInputs:(NSArray<TorchIValue* >* _Nullable) values {
     if (methodName.length == 0 || values.count ==0 ) {
         return nil;
     }
     std::vector<at::IValue> inputs;
-    for(PTHIValue* value in values) {
+    for(TorchIValue* value in values) {
         inputs.push_back(value.toIValue);
     }
     if (auto method = _impl->find_method(std::string([methodName cStringUsingEncoding:NSASCIIStringEncoding]))){
         auto result = (*method)(std::move(inputs));
-        return [PTHIValue newWithIValue:result];
+        return [TorchIValue newWithIValue:result];
     }
     // raise an exception?
     return nil;
