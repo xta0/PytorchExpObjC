@@ -22,4 +22,9 @@ Pod::Spec.new do |s|
       'VALID_ARCHS' => 'armv7 armv7s arm64' 
     }
     s.library = 'c++', 'stdc++'
+
+    s.test_spec 'Tests' do |ts| 
+      ts.source_files = 'Tests/*.{h,mm,m}'
+      ts.resources = 'Tests/models'
+    end
   end
