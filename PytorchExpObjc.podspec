@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
     s.name             = 'PytorchExpObjC'
-    s.version          = '0.0.1'
+    s.version          = '0.0.2'
     s.authors          = 'xta0'
     s.license          = { :type => 'MIT' }
     s.homepage         = 'https://github.com/xta0/PytorchExpObjC.git'
-    s.source           = { :git => 'https://github.com/xta0/PytorchExpObjC.git', :branch => "master" }
+    s.source           = { :git => 'https://github.com/xta0/PytorchExpObjC.git', :branch => "x86" }
     s.summary          = 'PytorchExp for Objective-C'
     s.description      = <<-DESC
    Objective-C wrapper of PytorchExp
