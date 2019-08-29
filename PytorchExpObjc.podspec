@@ -25,6 +25,6 @@ Pod::Spec.new do |s|
 
     s.test_spec 'Tests' do |ts| 
       ts.source_files = 'Tests/*.{h,mm,m}'
-      ts.resources = 'Tests/models'
+      ts.resources = ['Tests/models/*.pt']
     end
   end

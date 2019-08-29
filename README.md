@@ -5,11 +5,20 @@ The Objective-C API wrapper of PytorchExp
 
 ## Quick start
 
-Add the PytorchExp pod to your `podfile`
+Add the PytorchExpObjC to your `podfile`
+
+- Objective-C
 
 ```
 pod 'PytorchExpObjC', :git=>'https://github.com/xta0/PytorchExpObjC.git' ,:branch => 'master'
 ```
+- Swift
+
+```
+use_framework!
+pod 'PytorchExpObjC', :git=>'https://github.com/xta0/PytorchExpObjC.git' ,:branch => 'master'
+```
+
 
 ## Note
 
@@ -18,4 +27,4 @@ Since Pytorch is not in its final stage, the static libraries in this pod hasn't
 
 ## TestAPP
 
-The TestApp folder contains an Objective-C demo, it uses a traced torch script model which was exported from torchvision (ResNet18). The APIs are not in its finalized version. 
+The TestApp folder contains an Objective-C demo, it uses a traced torch script model which was exported from torchvision (ResNet18). To run the demo, just simply run `pod install` 
