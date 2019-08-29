@@ -11,8 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithModelPath:(NSString* )modelPath;
 - (void)predict:(UIImage* )image
-     Completion:(void(^__nullable)(NSArray<NSNumber* >* scores,
-                                   NSArray<NSNumber*>* index)) completion;
+     Completion:(void(^__nullable)(NSArray<NSDictionary* >* sortedResults)) completion;
 
 @end
 

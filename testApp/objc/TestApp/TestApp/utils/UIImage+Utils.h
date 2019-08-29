@@ -9,9 +9,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImage (Utils)
 
-- (NSData* )rgb;
+//- (NSData* )rgb;
 - (UIImage* )resize:(CGSize)sz;
-- (UIImage* )rgbImage;
+- (float* )normalizedBuffer;
+//- (UIImage* )rgbImage;
 
 
 @end
