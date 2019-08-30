@@ -12,12 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, TorchTensorType) {
     TorchTensorTypeByte,
-    TorchTensorTypeInt,//32bit integer
-    TorchTensorTypeLong,//64bit integer
-    TorchTensorTypeFloat, //32bit float
+    TorchTensorTypeInt,
+    TorchTensorTypeLong,
+    TorchTensorTypeFloat,
     TorchTensorTypeUndefined,
 };
-
 //Tensors are immutable objects
 @interface TorchTensor : NSObject<NSCopying>
 //The type of the tensor

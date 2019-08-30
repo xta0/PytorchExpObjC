@@ -21,21 +21,19 @@ typedef NS_ENUM(NSUInteger, TorchIValueType) {
     TorchIValueTypeTensorList,
 };
 
-
 @class TorchTensor;
-
 @interface TorchIValue : NSObject
 
 @property(nonatomic,assign, readonly) TorchIValueType type;
 
-+ (instancetype) newIValueWithTensor:(TorchTensor* )tensor;
-+ (instancetype) newIValueWithBool:(NSNumber* )value;
-+ (instancetype) newIValueWithDouble:(NSNumber* )value;
-+ (instancetype) newIValueWithInt:(NSNumber* )value;
-+ (instancetype) newIValueWithBoolList:(NSArray<NSNumber*>* )value;
-+ (instancetype) newIValueWithIntList:(NSArray<NSNumber*>* )value;
-+ (instancetype) newIValueWithDoubleList:(NSArray<NSNumber*>* )value;
-+ (instancetype) newIValueWithTensorList:(NSArray<TorchTensor*>* )value;
++ (instancetype) newWithTensor:(TorchTensor* )tensor;
++ (instancetype) newWithBool:(NSNumber* )value;
++ (instancetype) newWithDouble:(NSNumber* )value;
++ (instancetype) newWithInt:(NSNumber* )value;
++ (instancetype) newWithBoolList:(NSArray<NSNumber*>* )value;
++ (instancetype) newWithIntList:(NSArray<NSNumber*>* )value;
++ (instancetype) newWithDoubleList:(NSArray<NSNumber*>* )value;
++ (instancetype) newWithTensorList:(NSArray<TorchTensor*>* )value;
 
 /** Unavailable. */
 - (instancetype)init NS_UNAVAILABLE;

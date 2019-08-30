@@ -31,15 +31,15 @@
 
 
 #define DEFINE_IVALUE_WITH_SCALAR(type) \
-+ (instancetype) newIValueWith##type:(NSNumber* )value{\
++ (instancetype) newWith##type:(NSNumber* )value{\
     if(![value isKindOfClass:[NSNumber class]]){ return nil; }\
-    return [self newTorchIValueWithType:TorchIValueType##type Data:value]; \
+    return [self newWithType:TorchIValueType##type Data:value]; \
 }
 
 #define DEFINE_IVALUE_WITH_SCALAR_LIST(type) \
-+ (instancetype) newIValueWith##type##List:(NSArray<NSNumber*>* )list{\
++ (instancetype) newWith##type##List:(NSArray<NSNumber*>* )list{\
 if(![list isKindOfClass:[NSArray class]]){ return nil; }\
-return [self newTorchIValueWithType:TorchIValueType##type##List Data:list]; \
+return [self newWithType:TorchIValueType##type##List Data:list]; \
 }
 
 
@@ -54,7 +54,7 @@ DEFINE_IVALUE_WITH_SCALAR_LIST(Bool)
 DEFINE_IVALUE_WITH_SCALAR_LIST(Int)
 DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
 
-+ (instancetype) newIValueWithTensor:(TorchTensor* )tensor {
++ (instancetype) newWithTensor:(TorchTensor* )tensor {
     if(![tensor isKindOfClass:[TorchTensor class]]){
         return nil;
     }
@@ -70,7 +70,7 @@ DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
     return value;
 }
 
-+ (instancetype) newIValueWithTensorList:(NSArray<TorchTensor*>* )list {
++ (instancetype) newWithTensorList:(NSArray<TorchTensor*>* )list {
     if(![list isKindOfClass:[NSArray<TorchTensor* > class]]){
         return nil;
     }
@@ -90,7 +90,7 @@ DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
     return value;
 }
 
-+ (instancetype) newTorchIValueWithType:(TorchIValueType)type Data:(id _Nullable)data {
++ (instancetype) newWithType:(TorchIValueType)type Data:(id _Nullable)data {
     TorchIValue* value = [TorchIValue new];
     value->_type = type;
     at::IValue atIValue = {};
@@ -158,10 +158,6 @@ DEFINE_TO_SCALAR_LIST(Double);
     return {};
 }
 
-- (at::IValue* )unsafeImpl {
-    return _impl.get();
-}
-
 + (TorchIValue* )newWithIValue:(const at::IValue& )v {
     TorchIValue* value = [TorchIValue new];
     
@@ -178,7 +174,6 @@ DEFINE_TO_SCALAR_LIST(Double);
     value->_impl = std::move(tmp);
     return value;
 }
-
 
 @end
 

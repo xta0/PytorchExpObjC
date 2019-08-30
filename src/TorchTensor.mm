@@ -125,11 +125,6 @@ static inline TorchTensorType tensorType(c10::ScalarType type) {
     return at::Tensor(*_impl);
 }
 
-- (at::Tensor* )unsafeImpl {
-    CHECK_IMPL_(_impl);
-    return _impl.get();
-}
-
 + (TorchTensor* )newWithTensor:(const at::Tensor& ) tensor{
     std::shared_ptr<at::Tensor> impl = std::make_shared<at::Tensor>(tensor);
     if(!impl) {

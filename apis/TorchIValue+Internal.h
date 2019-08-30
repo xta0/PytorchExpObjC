@@ -13,9 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TorchIValue (Internal)
 
 - (at::IValue )toIValue;
-
-- (at::IValue* )unsafeImpl;
-
 + (TorchIValue* )newWithIValue:(const at::IValue& )value;
 
 @end

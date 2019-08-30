@@ -1,9 +1,9 @@
 PODS:
-  - PytorchExp (0.0.1):
-    - PytorchExp/Core (= 0.0.1)
-  - PytorchExp/Core (0.0.1):
+  - PytorchExp (0.0.2):
+    - PytorchExp/Core (= 0.0.2)
+  - PytorchExp/Core (0.0.2):
     - PytorchExp/Libtorch
-  - PytorchExp/Libtorch (0.0.1)
+  - PytorchExp/Libtorch (0.0.2)
   - PytorchExpObjC (0.0.1):
     - PytorchExp
   - PytorchExpObjC/Tests (0.0.1):
@@ -24,12 +24,12 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   PytorchExpObjC:
-    :commit: eec5c2e4c8d87cce9ffe0286d3ecfd14897578b4
+    :commit: 43ff6bd4c8c833d0cb9860c80334ac6ba9361914
     :git: https://github.com/xta0/PytorchExpObjC.git
 
 SPEC CHECKSUMS:
-  PytorchExp: f700aadfe498196941ace700821c4f7d02fcea67
-  PytorchExpObjC: 9d6a6e0cc9bfba0b1758cdd3dbef5989265c80d8
+  PytorchExp: f2a1fba0d54f318a782697c6d9a80d0062c8d746
+  PytorchExpObjC: c409d7fa70844f3dd529be52c426d8e0332797e1
 
 PODFILE CHECKSUM: 64798443ee055ea93c293f5f8162b96399a0bade
 

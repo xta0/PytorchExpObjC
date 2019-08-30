@@ -35,7 +35,7 @@ Completion:(void(^__nullable)(NSArray<NSDictionary* >* sortedResults))completion
     
     float* pixels = [image resize:{IMG_W,IMG_H}].normalizedBuffer;
     TorchTensor* imageTensor = [TorchTensor newWithType:TorchTensorTypeFloat Size:@[ @(1), @(IMG_C), @(IMG_W), @(IMG_H) ] Data:(void* )pixels];
-    TorchIValue* inputIValue = [TorchIValue newIValueWithTensor:imageTensor];
+    TorchIValue* inputIValue = [TorchIValue newWithTensor:imageTensor];
     TorchTensor* outputTensor = [[_module forward:@[inputIValue]] toTensor];
     //collect the top10 results
     NSArray<NSDictionary* >* sortedResults = [self topN:5 forResults:outputTensor];

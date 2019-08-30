@@ -13,9 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TorchTensor (Internal)
 
 - (at::Tensor)toTensor;
-
-- (at::Tensor* )unsafeImpl;
-
 + (TorchTensor* )newWithTensor:(const at::Tensor& ) tensor;
 
 @end
