@@ -35,7 +35,8 @@
     }
     std::vector<at::IValue> inputs;
     for(TorchIValue* value in values) {
-        inputs.push_back(value.toIValue);
+        at::IValue atValue = value.toIValue;
+        inputs.push_back(atValue);
     }
     auto result = _impl->forward(inputs);
     return [TorchIValue newWithIValue:result];
@@ -54,7 +55,6 @@
         auto result = (*method)(std::move(inputs));
         return [TorchIValue newWithIValue:result];
     }
-    // raise an exception?
     return nil;
 }
 

@@ -5,9 +5,11 @@ class Test(torch.jit.ScriptModule):
         super(Test, self).__init__()
 
     @torch.jit.script_method
-    def forward(self, input):
-        return None
-
+    def forward(self, input1, input2):
+        # type: (Tensor,Tensor) -> Tensor
+        output = torch.add(input1, input2)
+        return output
+    
     @torch.jit.script_method
     def eqBool(self, input):
         # type: (bool) -> bool
@@ -19,14 +21,14 @@ class Test(torch.jit.ScriptModule):
         return input
 
     @torch.jit.script_method
-    def eqFloat(self, input):
+    def eqDouble(self, input):
         # type: (float) -> float
         return input
 
     @torch.jit.script_method
     def eqTensor(self, input):
         # type: (Tensor) -> Tensor
-        return torch.add(input, input)
+        return input
 
     @torch.jit.script_method
     def eqBoolList(self, input): 
@@ -39,7 +41,7 @@ class Test(torch.jit.ScriptModule):
         return input
     
     @torch.jit.script_method
-    def eqFloatList(self, input):
+    def eqDoubleList(self, input):
         # type: (List[float]) -> List[float]
         return input
     

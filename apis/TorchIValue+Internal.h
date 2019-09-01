@@ -1,10 +1,3 @@
-//
-//  TorchIValue+IValue.h
-//  Pods-TestApp
-//
-//  Created by taox on 8/25/19.
-//
-
 #import "TorchIValue.h"
 #import <PytorchExp/PytorchExp.h>
 

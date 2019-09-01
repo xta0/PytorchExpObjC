@@ -22,6 +22,7 @@
 		A03FAC0223159A8400097E15 /* snake_400x400.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A03FABF923159A8400097E15 /* snake_400x400.jpg */; };
 		A03FAC0323159A8400097E15 /* synset_words.txt in Resources */ = {isa = PBXBuildFile; fileRef = A03FABFB23159A8400097E15 /* synset_words.txt */; };
 		A03FAC0423159A8400097E15 /* resnet18.pt in Resources */ = {isa = PBXBuildFile; fileRef = A03FABFC23159A8400097E15 /* resnet18.pt */; };
+		A08A425D23190ADA00C2F278 /* test.pt in Resources */ = {isa = PBXBuildFile; fileRef = A08A425C23190ADA00C2F278 /* test.pt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		A03FABF923159A8400097E15 /* snake_400x400.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = snake_400x400.jpg; sourceTree = "<group>"; };
 		A03FABFB23159A8400097E15 /* synset_words.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = synset_words.txt; sourceTree = "<group>"; };
 		A03FABFC23159A8400097E15 /* resnet18.pt */ = {isa = PBXFileReference; lastKnownFileType = file; path = resnet18.pt; sourceTree = "<group>"; };
+		A08A425C23190ADA00C2F278 /* test.pt */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.pt; sourceTree = "<group>"; };
 		FAA20B5A38E3AE4EA72AFCD1 /* Pods-TestApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestApp.release.xcconfig"; path = "Target Support Files/Pods-TestApp/Pods-TestApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -132,6 +134,7 @@
 		A03FABFA23159A8400097E15 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				A08A425C23190ADA00C2F278 /* test.pt */,
 				A03FABFB23159A8400097E15 /* synset_words.txt */,
 				A03FABFC23159A8400097E15 /* resnet18.pt */,
 			);
@@ -212,6 +215,7 @@
 				A03FAB5C2312B3A600097E15 /* Main.storyboard in Resources */,
 				A03FAC0423159A8400097E15 /* resnet18.pt in Resources */,
 				A03FAC0223159A8400097E15 /* snake_400x400.jpg in Resources */,
+				A08A425D23190ADA00C2F278 /* test.pt in Resources */,
 				A03FAC0023159A8400097E15 /* wolf_400x400.jpg in Resources */,
 				A03FAC0123159A8400097E15 /* dog_224x224.png in Resources */,
 			);

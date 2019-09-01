@@ -6,31 +6,46 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <PytorchExpObjC/PytorchExpObjC.h>
 
 @interface TestTorchModule : XCTestCase
 
 @end
 
-@implementation TestTorchModule
+@implementation TestTorchModule{
+    TorchModule* _module;
+}
 
 - (void)setUp {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    NSString* filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test" ofType:@"pt"];
+    _module = [TorchModule loadTorchscriptModel:filePath];
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+- (void)testForward {
+    int32_t t1[2][2] = {{1,1},{1,1}};
+    int32_t t2[2][2] = {{2,2},{2,2}};
+    TorchTensor* tensor1 = [TorchTensor newWithType:TorchTensorTypeInt Size:@[@(2),@(2)] Data:t1]; //2x2 tensor
+    TorchTensor* tensor2 = [TorchTensor newWithType:TorchTensorTypeInt Size:@[@(2),@(2)] Data:t2]; //2x2 tensor
+    TorchIValue* input1  = [TorchIValue newWithTensor:tensor1];
+    TorchIValue* input2  = [TorchIValue newWithTensor:tensor2];
+    //(Tensor, Tensor) -> Tensor
+    TorchIValue* output = [_module forward:@[input1, input2]];
+    TorchIValueType type = output.type;
+    XCTAssertEqual(type, TorchIValueTypeTensor);
+    TorchTensor* outputTensor = output.toTensor;
+    XCTAssertEqual(outputTensor[0][0].item.integerValue, 3);
+    XCTAssertEqual(outputTensor[0][1].item.integerValue, 3);
+    XCTAssertEqual(outputTensor[1][0].item.integerValue, 3);
+    XCTAssertEqual(outputTensor[1][1].item.integerValue, 3);
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testRunMethod {
+    TorchIValue* input  = [TorchIValue newWithBool:@(YES)];
+    //(bool) -> bool
+    TorchIValue* output = [_module run_method:@"eqBool" withInputs:@[input]];
+    TorchIValueType type = output.type;
+    XCTAssertEqual(type, TorchIValueTypeBool);
+    XCTAssertEqual(output.toBool.boolValue, YES);
 }
 
 @end

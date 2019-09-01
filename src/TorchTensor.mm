@@ -26,7 +26,7 @@
     _(Float) \
     _(Long) \
 
-static inline c10::ScalarType c10ScalarType(TorchTensorType type) {
+static inline c10::ScalarType scalarTypeFromTensorType(TorchTensorType type) {
     switch(type){
 #define DEFINE_CASE(x) case TorchTensorType##x: return c10::ScalarType::x;
         DEFINE_TENSOR_TYPES(DEFINE_CASE)
@@ -35,7 +35,7 @@ static inline c10::ScalarType c10ScalarType(TorchTensorType type) {
     return c10::ScalarType::Undefined;
 }
 
-static inline TorchTensorType tensorType(c10::ScalarType type) {
+static inline TorchTensorType tensorTypeFromScalarType(c10::ScalarType type) {
     switch(type){
 #define DEFINE_CASE(x) case c10::ScalarType::x: return TorchTensorType##x;
         DEFINE_TENSOR_TYPES(DEFINE_CASE)
@@ -53,11 +53,19 @@ static inline TorchTensorType tensorType(c10::ScalarType type) {
     if(!_impl){
         return TorchTensorTypeUndefined;
     }
-    return tensorType(_impl->scalar_type());
+    return tensorTypeFromScalarType(_impl->scalar_type());
 }
 
-- (BOOL) quantized{
+- (BOOL)quantized{
     return _impl ? _impl->is_quantized() : NO;
+}
+
+- (int64_t)numel{
+    CHECK_IMPL(_impl);
+    if(!_impl) {
+        return NSNotFound;
+    }
+    return _impl->numel();
 }
 
 - (void* )data {
@@ -65,10 +73,10 @@ static inline TorchTensorType tensorType(c10::ScalarType type) {
     return _impl->unsafeGetTensorImpl()->storage().data();
 }
 
-- (int64_t) dim {
+- (int64_t)dim {
     CHECK_IMPL(_impl);
     if(!_impl) {
-        return -1;
+        return NSNotFound;
     }
     return _impl->dim();
 }
@@ -87,17 +95,21 @@ static inline TorchTensorType tensorType(c10::ScalarType type) {
         int64_t dim = size[i].integerValue;
         dimsVec.push_back(dim);
     }
-    at::Tensor tensor = torch::from_blob( (void* )data, dimsVec,c10ScalarType(type));
+    at::Tensor tensor = torch::from_blob( (void* )data, dimsVec,scalarTypeFromTensorType(type));
     if (quantized) {
         tensor = at::quantize_linear(tensor, 1, 0, at::kQInt8);
     }
     return [TorchTensor newWithTensor:tensor];
 }
 
-
 - (NSString* )description {
     CHECK_IMPL_(_impl);
-    return [NSString stringWithCString:_impl -> toString().c_str() encoding:NSASCIIStringEncoding];
+    NSString* size = @"[";
+    for(NSNumber* num in self.size) {
+        size = [size stringByAppendingString:[NSString stringWithFormat:@"%ld", num.integerValue]];
+    }
+    size = [size stringByAppendingString:@"]"];
+    return [NSString stringWithFormat:@"[%s %@]",_impl -> toString().c_str(),size];
 }
 
 - (TorchTensor* )objectAtIndexedSubscript:(NSUInteger)idx {
@@ -107,12 +119,13 @@ static inline TorchTensorType tensorType(c10::ScalarType type) {
 }
 
 - (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx {
-    NSAssert(NO, @"Tensor object is immutable!");
+    NSAssert(NO, @"Tensors are immutable");
 }
 
 #pragma mark NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
+    //tensors are immutable
     return self;
 }
 
@@ -142,13 +155,15 @@ static inline TorchTensorType tensorType(c10::ScalarType type) {
     return t;
 }
 
-
 @end
 
 @implementation TorchTensor (Operations)
 
 - (NSNumber* )item {
     CHECK_IMPL_(_impl)
+    if( self.numel > 1 ){
+        return nil;
+    }
     switch (self.type) {
 #define DEFINE_CASE(x) case TorchTensorType##x: return @(_impl->item().to##x());
             DEFINE_TENSOR_SCALAR_TYPES(DEFINE_CASE)
@@ -160,7 +175,7 @@ static inline TorchTensorType tensorType(c10::ScalarType type) {
 
 - (TorchTensor* )to:(TorchTensorType) type {
     CHECK_IMPL_(_impl)
-    c10::ScalarType scalarType = c10ScalarType(type);
+    c10::ScalarType scalarType = scalarTypeFromTensorType(type);
     auto tensor = _impl->to(scalarType);
     return [TorchTensor newWithTensor:tensor];
 }
@@ -175,7 +190,6 @@ static inline TorchTensorType tensorType(c10::ScalarType type) {
     }
     auto newTensor =  _impl->permute(dimsVec);
     newTensor.options();
-    //tensors are immutable
     return [TorchTensor newWithTensor:newTensor];
 }
 

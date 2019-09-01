@@ -1,11 +1,3 @@
-//
-//  TorchIValue.m
-//  Pytorch-Exp-Demo
-//
-//  Created by taox on 8/25/19.
-//  Copyright © 2019 taox. All rights reserved.
-//
-
 #include <vector>
 #import "TorchIValue.h"
 #import "TorchIValue+Internal.h"
@@ -14,6 +6,7 @@
 #import <PytorchExp/PytorchExp.h>
 
 #define IVALUE_TYPE(_) \
+    _(None) \
     _(Bool) \
     _(Int) \
     _(Double) \
@@ -25,34 +18,44 @@
 
 
 #define IVALUE_SCALAR_TYPE(_) \
-    _(Bool, bool) \
-    _(Int, int) \
-    _(Double, double) \
-
-
-#define DEFINE_IVALUE_WITH_SCALAR(type) \
-+ (instancetype) newWith##type:(NSNumber* )value{\
-    if(![value isKindOfClass:[NSNumber class]]){ return nil; }\
-    return [self newWithType:TorchIValueType##type Data:value]; \
-}
-
-#define DEFINE_IVALUE_WITH_SCALAR_LIST(type) \
-+ (instancetype) newWith##type##List:(NSArray<NSNumber*>* )list{\
-if(![list isKindOfClass:[NSArray class]]){ return nil; }\
-return [self newWithType:TorchIValueType##type##List Data:list]; \
-}
-
+    _(Bool, bool, bool) \
+    _(Int, int, int64_t) \
+    _(Double, double,double) \
 
 @implementation TorchIValue {
     std::shared_ptr<at::IValue> _impl;
 }
 
-DEFINE_IVALUE_WITH_SCALAR(Bool)
-DEFINE_IVALUE_WITH_SCALAR(Int)
-DEFINE_IVALUE_WITH_SCALAR(Double)
-DEFINE_IVALUE_WITH_SCALAR_LIST(Bool)
-DEFINE_IVALUE_WITH_SCALAR_LIST(Int)
-DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
++ (instancetype)newWithNone{
+    auto impl = std::make_shared<at::IValue>();
+    if(!impl) {
+        return nil;
+    }
+    TorchIValue* value = [TorchIValue new];
+    value->_type = TorchIValueTypeNone;
+    value->_impl = std::move(impl);
+    return value;
+}
+
+#define DEFINE_IVALUE_WITH_SCALAR_TYPE(type) \
++ (instancetype) newWith##type:(NSNumber* )value{\
+if(![value isKindOfClass:[NSNumber class]]){ return nil; }\
+return [self newWithType:TorchIValueType##type Data:value]; \
+}
+
+DEFINE_IVALUE_WITH_SCALAR_TYPE(Bool)
+DEFINE_IVALUE_WITH_SCALAR_TYPE(Int)
+DEFINE_IVALUE_WITH_SCALAR_TYPE(Double)
+
+#define DEFINE_IVALUE_WITH_SCALAR_TYPE_LIST(type) \
++ (instancetype) newWith##type##List:(NSArray<NSNumber*>* )list{\
+if(![list isKindOfClass:[NSArray class]]){ return nil; }\
+return [self newWithType:TorchIValueType##type##List Data:list]; \
+}
+
+DEFINE_IVALUE_WITH_SCALAR_TYPE_LIST(Bool)
+DEFINE_IVALUE_WITH_SCALAR_TYPE_LIST(Int)
+DEFINE_IVALUE_WITH_SCALAR_TYPE_LIST(Double)
 
 + (instancetype) newWithTensor:(TorchTensor* )tensor {
     if(![tensor isKindOfClass:[TorchTensor class]]){
@@ -60,13 +63,13 @@ DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
     }
     auto t = tensor.toTensor;
     at::IValue atIValue(t);
-    auto tmp = std::make_shared<at::IValue>(atIValue);
-    if(!tmp) {
+    auto impl = std::make_shared<at::IValue>(atIValue);
+    if(!impl) {
         return nil;
     }
     TorchIValue* value = [TorchIValue new];
-    value->_type = TorchIValueTypeTensorList;
-    value->_impl = std::move(tmp);
+    value->_type = TorchIValueTypeTensor;
+    value->_impl = std::move(impl);
     return value;
 }
 
@@ -80,13 +83,13 @@ DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
         tensorList.push_back(t);
     }
     at::IValue atIValue(tensorList);
-    auto tmp = std::make_shared<at::IValue>(atIValue);
-    if(!tmp) {
+    auto impl = std::make_shared<at::IValue>(atIValue);
+    if(!impl) {
         return nil;
     }
     TorchIValue* value = [TorchIValue new];
     value->_type = TorchIValueTypeTensorList;
-    value->_impl = std::move(tmp);
+    value->_impl = std::move(impl);
     return value;
 }
 
@@ -95,47 +98,47 @@ DEFINE_IVALUE_WITH_SCALAR_LIST(Double)
     value->_type = type;
     at::IValue atIValue = {};
     switch (type) {
-    #define  DEFINE_IVALUE_SCALAR_CASE(x,y) case TorchIValueType##x: {atIValue = at::IValue([(NSNumber* )data y##Value]);break;}
-        IVALUE_SCALAR_TYPE(DEFINE_IVALUE_SCALAR_CASE)
-    #undef DEFINE_IVALUE_SCALAR_CASE
-            
-    #define  DEFINE_IVALUE_SCALAR_LIST_CASE(x,y) case TorchIValueType##x##List: {\
-    c10::List<y> list; \
+    #define  DEFINE_CASE(x,y,z) case TorchIValueType##x: {atIValue = at::IValue([(NSNumber* )data y##Value]);break;}
+        IVALUE_SCALAR_TYPE(DEFINE_CASE)
+    #undef DEFINE_CASE
+
+    #define  DEFINE_CASE(x,y,z) case TorchIValueType##x##List: {\
+    c10::List<z> list; \
     for(NSNumber* number in data){ list.push_back(number.y##Value); }\
-    at::IValue value(list); break; }
-        IVALUE_SCALAR_TYPE(DEFINE_IVALUE_SCALAR_LIST_CASE)
-    #undef DEFINE_IVALUE_SCALAR_LIST_CASE
+    atIValue = list; break; }
+        IVALUE_SCALAR_TYPE(DEFINE_CASE)
+    #undef DEFINE_CASE
         default:
             break;
     }
-    auto tmp = std::make_shared<at::IValue>(atIValue);
-    value->_impl = std::move(tmp);
+    auto impl = std::make_shared<at::IValue>(atIValue);
+    value->_impl = std::move(impl);
     return value->_impl ? value : nil;
 }
 
-#define DEFINE_TO_SCALAR(Type) \
+#define DEFINE_TO_SCALAR_TYPE(Type) \
 - (NSNumber* )to##Type {\
 if(!_impl || !_impl->is##Type()) { return nil; }\
 return @(_impl->to##Type()); \
 }
 
-DEFINE_TO_SCALAR(Bool);
-DEFINE_TO_SCALAR(Int);
-DEFINE_TO_SCALAR(Double);
+DEFINE_TO_SCALAR_TYPE(Bool);
+DEFINE_TO_SCALAR_TYPE(Int);
+DEFINE_TO_SCALAR_TYPE(Double);
 
-#define DEFINE_TO_SCALAR_LIST(Type) \
+#define DEFINE_TO_SCALAR_TYPE_LIST(Type) \
 - (NSArray<NSNumber* >* )to##Type##List {\
-if(!_impl || !_impl->is##Type()) { return nil; }\
+if(!_impl || !_impl->is##Type##List()) { return nil; }\
 auto list = _impl->to##Type##List(); \
 NSMutableArray<NSNumber* >* tmp = [NSMutableArray new]; \
 for(int i=0; i<list.size(); ++i) { [tmp addObject:@(list.get(i))]; } \
 return [tmp copy];\
 }
 
-DEFINE_TO_SCALAR_LIST(Bool);
-DEFINE_TO_SCALAR_LIST(Int);
-DEFINE_TO_SCALAR_LIST(Double);
-       
+DEFINE_TO_SCALAR_TYPE_LIST(Bool);
+DEFINE_TO_SCALAR_TYPE_LIST(Int);
+DEFINE_TO_SCALAR_TYPE_LIST(Double);
+
 
 - (TorchTensor* )toTensor {
    if (!_impl || !_impl->isTensor()) {
@@ -143,6 +146,19 @@ DEFINE_TO_SCALAR_LIST(Double);
    }
    at::Tensor tensor = _impl->toTensor();
    return [TorchTensor newWithTensor:tensor];
+}
+
+- (NSArray<TorchTensor *> *)toTensorList{
+    if (!_impl || !_impl->isTensorList()) {
+        return nil;
+    }
+    auto list = _impl->toTensorList();
+    NSMutableArray* ret = [NSMutableArray new];
+    for(int i=0; i<list.size(); ++i){
+        TorchTensor* tensor = [TorchTensor newWithTensor:list.get(i)];
+        [ret addObject:tensor];
+    }
+    return [ret copy];
 }
 
 @end
@@ -161,17 +177,17 @@ DEFINE_TO_SCALAR_LIST(Double);
 + (TorchIValue* )newWithIValue:(const at::IValue& )v {
     TorchIValue* value = [TorchIValue new];
     
-    #define IVALUE_TYPE_IF(x)\
+    #define DEFINE_IF(x)\
         if(v.is##x()) { value->_type = TorchIValueType##x; }
-        IVALUE_TYPE(IVALUE_TYPE_IF)
-    #undef IVALUE_TYPE_IF
+        IVALUE_TYPE(DEFINE_IF)
+    #undef DEFINE_IF
 
-    auto tmp = std::make_shared<at::IValue>(v);
-    if(!tmp){
+    auto impl = std::make_shared<at::IValue>(v);
+    if(!impl){
         return nil;
     }
     
-    value->_impl = std::move(tmp);
+    value->_impl = std::move(impl);
     return value;
 }
 

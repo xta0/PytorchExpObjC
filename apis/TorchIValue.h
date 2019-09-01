@@ -1,16 +1,9 @@
-//
-//  TorchIValue.h
-//  Pytorch-Exp-Demo
-//
-//  Created by taox on 8/25/19.
-//  Copyright © 2019 taox. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, TorchIValueType) {
+    TorchIValueTypeNone,
     TorchIValueTypeTensor,
     TorchIValueTypeBool,
     TorchIValueTypeDouble,
@@ -22,10 +15,14 @@ typedef NS_ENUM(NSUInteger, TorchIValueType) {
 };
 
 @class TorchTensor;
+/**
+ The input/output object of the JIT interpreter
+ */
 @interface TorchIValue : NSObject
 
 @property(nonatomic,assign, readonly) TorchIValueType type;
 
++ (instancetype) newWithNone;
 + (instancetype) newWithTensor:(TorchTensor* )tensor;
 + (instancetype) newWithBool:(NSNumber* )value;
 + (instancetype) newWithDouble:(NSNumber* )value;
