@@ -2,5 +2,5 @@
 platform :ios, '10.3'
 
 target 'TestApp' do
-  pod 'PytorchExpObjC', :git=>'https://github.com/xta0/PytorchExpObjC.git' ,:branch => 'master', :testspecs => ['Tests']
+  pod 'PytorchExpObjC', :git=>'https://github.com/xta0/PytorchExp.git' ,:branch => 'master', :testspecs => ['Tests']
 end
