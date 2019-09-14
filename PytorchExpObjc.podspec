@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'PytorchExpObjC'
-    s.version          = '0.0.1'
+    s.version          = '0.0.2'
     s.authors          = 'xta0'
     s.license          = { :type => 'MIT' }
     s.homepage         = 'https://github.com/xta0/PytorchExpObjC.git'
@@ -10,16 +10,16 @@ Pod::Spec.new do |s|
    Objective-C wrapper of PytorchExp
                          DESC
   
-    s.ios.deployment_target = '10.3'
+    s.ios.deployment_target = '12.0'
     s.module_name = 'PytorchExpObjC'
     s.static_framework = true
     s.public_header_files = 'apis/*.h'
     s.source_files = [ 'apis/*.{h,m,mm}', 'src/*.{h,m,mm}' ]
     s.module_map = 'apis/framework.modulemap'
-    s.dependency 'PytorchExp'
+    s.dependency 'LibTorch'
     s.pod_target_xcconfig = { 
       'HEADER_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/PytorchExp/install/include" "${PODS_ROOT}/PytorchExpObjC/apis"',
-      'VALID_ARCHS' => 'armv7 armv7s arm64' 
+      'VALID_ARCHS' => 'x86 arm64' 
     }
     s.library = 'c++', 'stdc++'
 
