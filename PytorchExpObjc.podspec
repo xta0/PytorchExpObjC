@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     s.module_map = 'apis/framework.modulemap'
     s.dependency 'LibTorch'
     s.pod_target_xcconfig = { 
-      'HEADER_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/PytorchExp/install/include" "${PODS_ROOT}/PytorchExpObjC/apis"',
+      'HEADER_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/LibTorch/install/include" "${PODS_ROOT}/PytorchExpObjC/apis"',
       'VALID_ARCHS' => 'x86 arm64' 
     }
     s.library = 'c++', 'stdc++'

@@ -6,7 +6,7 @@
 //
 
 #import "TorchTensor.h"
-#import <PytorchExp/PytorchExp.h>
+#import <LibTorch/LibTorch.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

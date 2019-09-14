@@ -6,7 +6,7 @@
 //  Copyright © 2019 taox. All rights reserved.
 //
 
-#import <PytorchExp/PytorchExp.h>
+#import <LibTorch/LibTorch.h>
 #import "TorchModule.h"
 #import "TorchIValue+Internal.h"
 

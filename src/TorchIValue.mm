@@ -3,7 +3,7 @@
 #import "TorchIValue+Internal.h"
 #import "TorchTensor.h"
 #import "TorchTensor+Internal.h"
-#import <PytorchExp/PytorchExp.h>
+#import <LibTorch/LibTorch.h>
 
 #define IVALUE_TYPE(_) \
     _(None) \

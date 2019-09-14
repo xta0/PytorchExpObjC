@@ -7,7 +7,7 @@
 //
 #import "TorchTensor.h"
 #import "TorchTensor+Internal.h"
-#import <PytorchExp/PytorchExp.h>
+#import <LibTorch/LibTorch.h>
 
 #define CHECK_IMPL(x) NSCAssert(x!=nil,@"impl is nil!");
 #define CHECK_IMPL_(x) \
